@@ -1,4 +1,4 @@
-rm(ls=list())
+rm(list=ls())
 library(dplyr)
 print("reading data")
 data <- tbl_df(read.csv("data.csv"))
