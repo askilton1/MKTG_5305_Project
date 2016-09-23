@@ -8,9 +8,10 @@ data <- data %>%
          dow = weekdays(date), 
          weekend = ifelse(dow=="Saturday" | dow=="Sunday",1,0),
          class = Classification,
-         turn1 = ifelse(Door.Name == "FITN-TRN1",1,0),
-         first_time = ifelse(1:length(anonID) %in% match(unique(anonID),anonID),0,1)) %>%
+         turn1 = ifelse(Door.Name == "FITN-TRN1",1,0)) %>%
   select(-Door.Access.Actual.DateTime,-Result,-Door.Name,-Classification) %>%
   filter(date >= "2013-06-15" & date <= "2014-06-15")
 print("done")
 
+data$first_time <- 0
+data$first_time[match(unique(data$anonID),data$anonID)] <- 1
