@@ -19,7 +19,7 @@ rm(list=setdiff(ls(), "data"))
 ##----- total visitors, unique visitors, by day of week
 by_dow <- data %>%
   group_by(dow) %>%
-  summarise(All = mean(n()), New = mean(first_time)*n()) %>%
+  summarise(All = mean(n()),Unique = length(unique(anonID)), New = mean(first_time)*n()) %>%
   select(dow,All,New) %>%
   slice(c(2,6,7,5,1,3,4)) 
 #-save table as CSV
@@ -35,7 +35,7 @@ rm(list=setdiff(ls(), "data"))
 ##----- total visitors, unique visitors, by month
 by_month <- data %>%
   group_by(month) %>%
-  summarise(All = mean(n()), New = mean(first_time)*n(),date=mean(date)) %>%
+  summarise(All = mean(n()),Unique = length(unique(anonID)), New = mean(first_time)*n(),date=mean(date)) %>%
   arrange(date) 
 #-save table as CSV
 write.csv(select(by_month,-date),"tables/by_month.csv",row.names=FALSE)
