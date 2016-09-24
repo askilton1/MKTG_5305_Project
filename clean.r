@@ -5,7 +5,7 @@ data <- tbl_df(read.csv("data.csv"))
 print("cleaning data")
 data <- data %>% 
   mutate(date = as.POSIXct((Door.Access.Actual.DateTime),origin = "1960-01-01",format="%A, %B %d, %Y"),
-         dow = weekdays(date), 
+         dow = weekdays(date),
          month = months(date),
          weekend = ifelse(dow=="Saturday" | dow=="Sunday",1,0),
          class = Classification,
