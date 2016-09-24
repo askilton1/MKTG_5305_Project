@@ -8,7 +8,7 @@ by_day <- data %>%
   group_by(date) %>%
   summarise(All = n(),Unique = length(unique(anonID)),New = sum(first_time))
 #-save table as CSV
-write.csv(by_day,"tables/by_day.csv") #save table
+write.csv(by_day,"tables/by_day.csv",row.names=FALSE) #save table
 #-plot
 by_day.melt <- melt(by_day,"date") 
 ggplot(by_day.melt, aes(x=date,y=value)) + geom_line() + facet_grid(variable~.,scales="free") + 
@@ -23,7 +23,7 @@ by_dow <- data %>%
   select(dow,All,New) %>%
   slice(c(2,6,7,5,1,3,4)) 
 #-save table as CSV
-write.csv(by_dow,"tables/by_dow.csv")
+write.csv(by_dow,"tables/by_dow.csv",row.names=FALSE)
 #-plot
 by_dow.melt <- melt(by_dow,"dow") 
 by_dow.melt$dow <- factor(by_dow.melt$dow, levels = by_dow.melt$dow) #reorder months for plot
@@ -38,7 +38,7 @@ by_month <- data %>%
   summarise(All = mean(n()), New = mean(first_time)*n(),date=mean(date)) %>%
   arrange(date) 
 #-save table as CSV
-write.csv(select(by_month,date),"tables/by_month.csv")
+write.csv(select(by_month,-date),"tables/by_month.csv",row.names=FALSE)
 #-plot
 by_month.melt <- melt(by_month,c("month","date"))
 by_month.melt$month <- factor(by_month.melt$month, levels = by_month.melt$month) #reorder months for plot
