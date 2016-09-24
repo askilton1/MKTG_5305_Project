@@ -6,33 +6,41 @@ library(reshape2)
 ##----- total visitors, unique visitors, by day
 by_day <- data %>%
   group_by(date) %>%
-  summarise(totalVisitors = n(),uniqueVisitors = length(unique(anonID)),newVisitors = sum(first_time))
+  summarise(All = n(),Unique = length(unique(anonID)),New = sum(first_time))
 #-save table as CSV
 write.csv(by_day,"by_day.csv") #save table
 #-plot
 by_day.melt <- melt(by_day,"date") 
 ggplot(by_day.melt, aes(x=date,y=value)) + geom_line() + facet_grid(variable~.,scales="free") + 
-  ylab("") + xlab("date")
-ggsave("by_day.jpg")
+  ylab("Number of visitors per day") + xlab("date") + theme_minimal()
+ggsave("plots/by_day.png",width=6,height=6,units="in")
 
 ##----- total visitors, unique visitors, by day of week
 by_dow <- data %>%
   group_by(dow) %>%
-  summarise(avgVisitors = mean(n()), avgNewVisitors = mean(first_time)*n()) %>%
-  select(dow,avgVisitors,avgNewVisitors) %>%
+  summarise(All = mean(n()), New = mean(first_time)*n()) %>%
+  select(dow,All,New) %>%
   slice(c(2,6,7,5,1,3,4)) 
 #-save table as CSV
 write.csv(by_dow,"by_dow.csv")
 #-plot
 by_dow.melt <- melt(by_dow,"dow") 
-ggplot(by_dow.melt, aes(x=dow,y=value,fill=variable)) + geom_bar(stat = "identity",position="dodge") + #facet_grid(variable~.,scales="free") + 
-  ylab("") + xlab("date")
-ggsave("by_dow")
+by_dow.melt$dow <- factor(by_dow.melt$dow, levels = by_dow.melt$dow) #reorder months for plot
+ggplot(by_dow.melt, aes(x=dow,y=value,fill=variable)) + geom_bar(stat = "identity",position="dodge") +  
+  ylab("Average visitors by day") + xlab("date") + theme_minimal() + labs(fill="") + theme(legend.position="top") + scale_fill_grey()
+ggsave("plots/by_dow.png",width=6,height=3,units="in")
 
-data %>%
+##----- total visitors, unique visitors, by month
+by_month <- data %>%
   group_by(month) %>%
-  summarise(avgVisitors = mean(n()), prcntNewVisitors = round(mean(first_time),2),date=mean(date)) %>%
-  arrange(date) %>% 
-  select(-date) %>%
-  write.csv(.,"by_month.csv")
-
+  summarise(All = mean(n()), New = mean(first_time)*n(),date=mean(date)) %>%
+  arrange(date) 
+#-save table as CSV
+write.csv(select(by_month,date),"by_month.csv")
+#-plot
+by_month.melt <- melt(by_month,c("month","date"))
+by_month.melt$month <- factor(by_month.melt$month, levels = by_month.melt$month) #reorder months for plot
+ggplot(by_month.melt, aes(x=month,y=value,fill=variable)) + geom_bar(stat = "identity",position="dodge") + 
+  ylab("Average daily visitors") + xlab("date") + theme_minimal() + theme(axis.text.x = element_text(angle=30),legend.position="top")  + labs(fill="") + 
+  scale_fill_grey()
+ggsave("plots/by_month.png",width=6,height=3,units="in")
