@@ -20,7 +20,6 @@ rm(list=setdiff(ls(), "data"))
 by_dow <- data %>%
   group_by(dow) %>%
   summarise(All = mean(n()),Unique = length(unique(anonID)), New = mean(first_time)*n()) %>%
-  select(dow,All,New) %>%
   slice(c(2,6,7,5,1,3,4)) 
 #-save table as CSV
 write.csv(by_dow,"tables/by_dow.csv",row.names=FALSE)

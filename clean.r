@@ -1,5 +1,5 @@
 rm(list=ls())
-library(dplyr)
+suppressMessages(library(dplyr))
 print("reading data")
 data <- tbl_df(read.csv("data.csv"))
 print("cleaning data")
