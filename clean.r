@@ -11,7 +11,7 @@ data <- data %>%
          turn1 = ifelse(Door.Name == "FITN-TRN1",1,0),
          anonID = as.factor(anonID)) %>%
   select(-Door.Access.Actual.DateTime,-Result,-Door.Name,-Classification) %>%
-  filter(date >= "2014-06-15" & date <= "2015-06-15")
+  filter(date >= "2014-07-01" & date <= "2015-06-30")
 print("done")
 
 data$first_time <- 0
