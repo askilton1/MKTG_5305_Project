@@ -1,7 +1,9 @@
-source("clean.r")
 library(dplyr)
 library(ggplot2)
 library(reshape2)
+source("clean.r")
+
+data <- clean(read.csv("data.csv"))
 
 ##----- total visitors, unique visitors, by day
 by_day <- data %>%

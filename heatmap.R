@@ -4,8 +4,10 @@ require(reshape2)
 require(plyr)
 require(scales)
 library(dplyr)
-
 source("clean.r")
+
+data <- clean(read.csv("data.csv"))
+
 data <- tbl_df(data)
 data$year<-as.numeric(as.POSIXlt(data$date)$year+1900)
 # the month too 
