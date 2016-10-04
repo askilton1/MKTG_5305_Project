@@ -1,4 +1,4 @@
-require(quantmod);require(ggplot2);require(reshape2);require(plyr)
+require(ggplot2);require(reshape2);require(plyr)
 require(scales);library(dplyr);source("clean.r")
 
 data <- clean(read.csv("data.csv"))
