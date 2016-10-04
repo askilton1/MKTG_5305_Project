@@ -1,3 +1,10 @@
+require(quantmod)
+require(ggplot2)
+require(reshape2)
+require(plyr)
+require(scales)
+library(dplyr)
+
 source("clean.r")
 data <- tbl_df(data)
 data$year<-as.numeric(as.POSIXlt(data$date)$year+1900)
