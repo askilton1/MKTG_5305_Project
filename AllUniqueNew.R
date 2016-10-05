@@ -3,5 +3,6 @@ AllUniqueNew <- function(data,group_by="date"){
     group_by_(group_by) %>%
     mutate(All = n(),Unique = length(unique(anonID)),New = sum(first_time)) %>%
     ungroup() %>%
+    filter(class == "Student") %>%
   return()}
 
