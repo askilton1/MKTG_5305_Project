@@ -1,17 +1,19 @@
 library(dplyr)
 library(ggplot2)
 library(reshape2)
+library(tidyr)
 source("clean.r")
+source("dateTime.R")
+source("AllUniqueNew.R")
 
-data <- clean(read.csv("data.csv"))
-
+clean_calendar_data <- calendar_fun(clean(read.csv("data.csv")))
+AllUniqueNew(data)
 ##----- total visitors, unique visitors, by day
-by_day <- data %>%
-  group_by(date) %>%
-  summarise(All = n(),Unique = length(unique(anonID)),New = sum(first_time))
-#-save table as CSV
-write.csv(by_day,"tables/by_day.csv",row.names=FALSE) #save table
+AllUniqueNew(data) %>%
+  write.csv("tables/by_day.csv",row.names=FALSE) #save table
 #-plot
+AllUniqueNew(data) %>%
+  gather(key="test",All,Unique,New)
 by_day.melt <- melt(by_day,"date") 
 ggplot(by_day.melt, aes(x=date,y=value)) + geom_line() + facet_grid(variable~.,scales="free") + 
   ylab("Number of visitors per day") + xlab("date") + theme_minimal()
