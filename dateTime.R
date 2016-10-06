@@ -8,11 +8,11 @@ calendar_fun <- function(data){
       dow = factor(weekdays(date,abbreviate=TRUE),levels=rev(c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")),ordered=TRUE),
       week = as.numeric(format(date,"%W")),
       weekend = ifelse(dow=="Sat" | dow=="Sun",1,0),
-      before_anonID = ifelse(date >= "2014-09-15",1,0)) %>%
+      idToExclude = ifelse(date <= "2014-09-20" | date == "2015-01-19" | date == "2015-04-03",anonID,NA)) %>%
     unite(yearmonth, year, month, sep="-", remove=FALSE) %>%
     group_by(yearmonth) %>% mutate(monthweek=ifelse(1+week-min(week) == 6, 5, 1+week-min(week))) %>% ungroup() %>%
-    filter(before_anonID==1,date >= "2014-09-15" & date <= "2015-06-30") %>% 
+    #filter(date >= "2014-09-15" & date <= "2015-06-30") %>% 
     mutate(yearmonth = factor(yearmonth,levels=c("2014-Sep","2014-Oct","2014-Nov","2014-Dec","2015-Jan","2015-Feb","2015-Mar","2015-Apr","2015-May","2015-Jun"))) %>%
-    select(-Door.Access.Actual.DateTime,-before_anonID) %>%
+    select(-Door.Access.Actual.DateTime) %>%
   return()
 }
