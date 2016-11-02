@@ -1,4 +1,5 @@
 library(tidyverse)
+library(lubridate)
 
 #import data
 read_csv("data.csv", 
@@ -20,14 +21,30 @@ read_csv("data.csv",
                                      #and returns id if new, NA if not new
                                      id, NA),
          #also filter for students
-         class == "Student") %>%
-  group_by(month = month(date, label = TRUE)) %>%
-  summarise(All = n(), Unique = length(unique(id)), New = sum(first_time)) -> df
+         class == "Student") -> df
 
-#-plot
+#Create tables
 df %>%
-  gather(class, value, All, Unique, New) %>%
-  mutate(month = factor(month, levels = c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"), ordered=TRUE)) %>%
-  ggplot(aes(x=month, y=value)) + geom_bar(stat = "identity") + facet_grid(class ~ .,scales="free") + 
-    ylab("Number of visitors per month") + xlab("month") + theme_minimal()
+  group_by(month = month(date, label = TRUE)) %>%
+  summarise(All = n(), Unique = length(unique(id)), New = sum(first_time)) -> by_month.df
+
+df %>%
+  group_by(monthday = day(date)) %>%
+  summarise(All = n(), Unique = length(unique(id)), New = sum(first_time)) -> by_day_of_month.df
+
+df %>%
+  group_by(weekday = wday(date)) %>%
+  summarise(All = n(), Unique = length(unique(id)), New = sum(first_time)) -> by_weekday.df
+
+df %>%
+  group_by(week = week(date)) %>%
+  summarise(All = n(), Unique = length(unique(id)), New = sum(first_time)) -> by_week_of_year.df
+
+#Sample plot, can be modified for any of above tables
+by_week_of_year.df %>%
+  gather(key = class, value = visitors, All, Unique, New) %>%
+  #use following row with months
+  #mutate(month = factor(month, levels = c("Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"), ordered=TRUE)) %>%
+  ggplot(., aes(x=week, y=visitors)) + geom_bar(stat = "identity") + facet_grid(class ~ .,scales="free") + 
+    ylab("Number of visitors per month") + xlab("month") + theme_minimal() 
 ggsave("plots/by_day.png",width=6,height=6,units="in")
