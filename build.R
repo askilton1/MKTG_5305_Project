@@ -14,14 +14,11 @@ read_csv("data.csv",
   mutate(date = as.POSIXct(date,origin = "1960-01-01",format="%A, %B %d, %Y"),
          #create new column that marks whether or not first time visitor
          first_time = ifelse(1:length(id) %in% match(unique(id),id),1,0)) %>%
-         #filter for IDs that first appeared in 14-15 school year
-  filter(id %in% ifelse(date <= "2014-09-20" | 
-                                     #or appeared on days the facility was closed (to remove staff)
-                                     date == "2015-01-19" | date == "2015-04-03",
-                                     #and returns id if new, NA if not new
-                                     id, NA),
+  filter(date >= "2014-09-20", date != "2015-01-19", date != "2015-04-03",
          #also filter for students
-         class == "Student") -> df
+         class == "Student",
+         #select only rows within school year
+         date >= "2014-09-20" & date <= "2015-06-20") -> df
 
 #Create tables
 df %>%
